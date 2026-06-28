@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+
+    <!--bootstrap-->
+    <link href="https://cdn.jsdelivir.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--estilos-->
+    <link rel="stylesheet" href="/Proyectos/alke wallet/assets/css/alke wallet.css">
+</head>
+
+<body>
+    <header>
+        <h1 class="text-center">Alke Wallet</h1>
+    </header>
+
+
+    <main>
+        <section class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8 col-lg-6">
+                    <div id="mensaje"></div>
+                    <h2 class="text-center mb-4">Registro de Usuario</h2>
+                    <form id="form-registro">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre Completo</label>
+                            <input type="text" name="Nombre" class="form-control" id="nombre"
+                                placeholder="Ingrese su nombre" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="usuario" class="form-label">Usuario</label>
+                            <input type="text" name="usuario" class="form-control" id="usuario"
+                                placeholder="Ingrese un usuario" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="contraseña" class="form-label">Contraseña</label>
+                            <input type="password" name="contraseña" class="form-control" id="contraseña"
+                                placeholder="Ingrese una contraseña" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="con_password" class="form-label">Confirmar contraseña</label>
+                            <input type="password" name="con_password" class="form-control" id="con_password"
+                                placeholder="Confirme contraseña" required>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary w-100">Registrate</button>
+                        </div>
+                    </form>
+                    <div>
+                        <p class="text-center pt-3">¿Ya tienes cuenta?
+                            <a href="login.html">Inicia Sesión</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+
+
+    <footer>
+        <p class="text-center">@2026 alke wallet Cristian Altamirano</p>
+    </footer>
+
+
+    <!--bootstrap-->
+    <script src="https://cdn.jsdelivir.net/npm/bootstrap@5.3.8/dist/css/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.getElementById("form-registro").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const nombre = document.getElementById("nombre").value;
+            const usuario = document.getElementById("usuario").value;
+            const contraseña = document.getElementById("password").value;
+            const confirmar_contraseña = document.getElementById("con_password").value;
+
+            if (contraseña !== confirmar_contraseña) {
+                document.getElementById("mensaje").innerHTML = `
+                <div class="alert alert-danger alert-dismissible fade show">
+                    Las contraseñas no coinciden.
+                    <button type="button" class="btn-close" data-bs-dismiss>
+                </div>
+                `;
+                return;
+            }
+
+
+
+            const nuevoUsuario = { nombre, usuario, contraseña };
+
+            let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+            usuarios.push(nuevoUsuario);
+
+            localStorage.setItem("usuarios", JSON.stringify(usuarios))
+
+
+            document.getElementById("mensaje").innerHTML = `
+                <div class="alert alert-danger alert-dismissable fade show">
+                    Registro exitoso.
+                    Redirigiendo...
+                    <button type="button" class="btn-close" data-bs-dismiss>
+                </div>
+                `;
+
+            setTimeout(() => {
+
+                window.location.href = "login.html";
+
+            }, 3000);
+
+
+        })
+    </script>
+</body>
+
+</html>

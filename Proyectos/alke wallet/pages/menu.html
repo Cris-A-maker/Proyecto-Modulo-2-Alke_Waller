@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+
+
+    <!--font awesome-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+
+    <!--bootstrap-->
+    <link href="https://cdn.jsdelivir.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--estilos-->
+    <link rel="stylesheet" href="/Proyectos/alke wallet/assets/css/alke_wallet.css">
+</head>
+
+<body>
+    <header class="d-flex justify-content-between align-items-center">
+        <a href="menu.html" class="btn btn-success"><i class="fa-solid fa-reply"></i></a>
+        <h1 class="text-center">Alke Wallet</h1>
+        <button id="logout" class="btn btn-danger">
+            <i class="fa-solid fa-power-off"></i>
+        </button>
+    </header>
+    <section class="container">
+        <div class="row justify-content-center">
+            <div class="col-10 col-md-9">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h2>Saldo Disponible</h2>
+                        <span class="saldo">$400.000</span>
+                        <p>Tu saldo total actual</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="container mb-5">
+        <div class="row row-gap-3 justify-content-center">
+            <div class="col-10 col-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h3>Depositar</h3>
+                        <p>Agregar dinero a tu billetera virtual</p>
+                        <a href="deposit.html" class="btn btn-success">Depositar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="container mb-5">
+        <div class="row row-gap-3 justify-content-center">
+            <div class="col-10 col-md-3">
+                <div class="card">
+                    <div class="card-body text center">
+                        <h3>Enviar dinero</h3>
+                        <p>Realiza una transferencia a otros usuarios</p>
+                        <a href="transaction.html" class="btn btn-success">Enviar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="container">
+        <div class="row row-gap-3 justify-content-center">
+            <div class="col-10 col-md-3">
+                <div class="card">
+                    <div class="card-body text center">
+                        <h3>Transacciones</h3>
+                        <p>Consulta el historial de movimientos</p>
+                        <a href="transactions.html" class="btn btn-success">Ver Historial</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer>
+        <p class="text-center">@2026 alke wallet Cristian Altamirano</p>
+    </footer>
+
+    <!--bootstrap-->
+    <script src="https://cdn.jsdelivir.net/npm/bootstrap@5.3.8/dist/css/bootstrap.bundle.min.js"></script>
+
+
+    <script>
+        //proteger vista
+        const usuarioLogueado = localStorage.getItem("usuarioLogueado");
+        if (!usuarioLogueado) {
+            window.location = "login.html"
+        }
+
+
+
+        //cerrar sesion
+        document.getElementById("logout").addEventListener("click", function () {
+            localStorage.removeItem("usuarioLogueado");
+            window.location.href = "login.html"
+        });
+
+
+        //saldo
+        const saldo = Number(localStorage.getItem("saldo")) || 0
+        document.querySelector(".saldo").textContent = "$" + saldo.toLocaleString
+            ("es-CL");
+    </script>
+
+</body>
+
+</html>
