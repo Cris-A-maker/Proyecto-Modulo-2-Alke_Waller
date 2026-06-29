@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transaction</title>
 
+    <!--font awesome-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+
     <!--wallet-->
     <script src="/Proyectos/alke wallet/assets/js/wallet.js"></script>
 
@@ -19,12 +22,35 @@
 <body>
     <header class="d-flex justify-content-between align-items-center">
         <a href="menu.html" class="btn btn-success"><i class="fa-solid fa-reply"></i></a>
-        <h1 class="text-center">Transacción</h1>
+        <h1 class="text-center">Transacciónes</h1>
         <button id="logout" class="btn btn-danger">
             <i class="fa-solid fa-power-off"></i>
         </button>
     </header>
 
+
+    <main class="container floating-actions">
+        <div class="card card-soft p-2">
+            <div class="list-group list-group-flush" id="txt_List"></div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3 gap-2">
+            <button class="btn btn-outline-secondary d-flex align-items-center gap-1" id="prevPage" type="button">
+                <i class="bi bi-arrow-left"></i>
+                Anterior
+            </button>
+
+            <div class="small-muted">
+                Página <span id="page_Num">1</span> / <span id="page_Total">1</span>
+            </div>
+
+            <button class="btn btn-outline-secondary d-flex align-items-center gap-1" id="next_Page" type="button">
+                Siguiente
+                <i class="bi bi-arrow-right"></i>
+            </button>
+        </div>
+        <div style="height: 80px"></div>
+    </main>
 
 
 

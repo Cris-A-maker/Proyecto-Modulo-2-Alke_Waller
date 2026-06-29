@@ -6,9 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Send Money</title>
 
+    <!--font awesome-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+
     <!--wallet-->
     <script src="/Proyectos/alke wallet/assets/js/wallet.js"></script>
-    
+
     <!--bootstrap-->
     <link href="https://cdn.jsdelivir.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -26,6 +29,60 @@
     </header>
 
 
+    <main class="container floating-actions">
+        <div class="card card-soft p-3">
+            <div class="small-muted mb-2">
+                Saldo: <strong id="balanceSend">$0</strong>
+            </div>
+
+            <div class="alert alert-success d-none" id="okSend"></div>
+            <div class="alert alert-danger d-none" id="errSend"></div>
+
+            <div class="d-none small-muted mb-2" id="selectedContact"></div>
+
+            <form id="enviar_Form">
+                <label class="form-label">Buscar contacto</label>
+                <input class="form-control mb-2" id="searchContact" placeholder="Escribe un nombre..." />
+
+                <div class="list-group mb-3" id="contactsList"></div>
+
+                <label class="form-label">Monto</label>
+                <input class="form-control mb-3" type="number" min="1" id="amountSend" placeholder="Ej: 1500"
+                    required />
+
+                <button class="btn btn-primary w-100" id="btnSend" type="submit">
+                    Enviar
+                </button>
+            </form>
+        </div>
+        <div style="height: 80px"></div>
+    </main>
+
+    <!-- agregar contacto -->
+    <div class="modal fade" id="addModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content" style="border-radius: 18px">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nuevo contacto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control mb-2" id="cName" placeholder="Nombre" />
+                    <input class="form-control mb-2" id="cBank" placeholder="Banco" />
+                    <input class="form-control" id="cAcc" placeholder="Cuenta (ej: 123-456)" />
+                    <div class="small-muted mt-2">Se guardará en localStorage.</div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button class="btn btn-primary" id="saveContact" type="button">
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
