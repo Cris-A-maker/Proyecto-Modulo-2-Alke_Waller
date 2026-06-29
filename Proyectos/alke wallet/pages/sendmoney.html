@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Send Money</title>
 
+    <!--wallet-->
+    <script src="/Proyectos/alke wallet/assets/js/wallet.js"></script>
+    
     <!--bootstrap-->
     <link href="https://cdn.jsdelivir.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -14,6 +17,13 @@
 </head>
 
 <body>
+    <header class="d-flex justify-content-between align-items-center">
+        <a href="menu.html" class="btn btn-success"><i class="fa-solid fa-reply"></i></a>
+        <h1 class="text-center">Enviar Dinero</h1>
+        <button id="logout" class="btn btn-danger">
+            <i class="fa-solid fa-power-off"></i>
+        </button>
+    </header>
 
 
 
@@ -23,10 +33,27 @@
 
 
 
-
-        <footer>
+    <footer>
         <p class="text-center">@2026 alke wallet Cristian Altamirano</p>
     </footer>
+
+    <script src="https://cdn.jsdelivir.net/npm/bootstrap@5.3.8/dist/css/bootstrap.bundle.min.js"></script>
+
+    <script>
+        //proteger vista
+        const usuarioLogueado = localStorage.getItem("usuarioLogueado");
+        if (!usuarioLogueado) {
+            window.location = "login.html"
+        }
+
+
+
+        //cerrar sesion
+        document.getElementById("logout").addEventListener("click", function () {
+            localStorage.removeItem("usuarioLogueado");
+            window.location.href = "login.html"
+        });
+    </script>
 </body>
 
 </html>

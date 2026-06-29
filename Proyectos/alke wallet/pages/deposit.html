@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deposit</title>
 
+    <!--wallet-->
+    <script src="/Proyectos/alke wallet/assets/js/wallet.js"></script>
+
     <!--bootstrap-->
     <link href="https://cdn.jsdelivir.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -14,14 +17,125 @@
 </head>
 
 <body>
+    <header class="d-flex justify-content-between align-items-center">
+        <a href="menu.html" class="btn btn-success"><i class="fa-solid fa-reply"></i></a>
+        <h1 class="text-center">Depositar</h1>
+        <button id="logout" class="btn btn-danger">
+            <i class="fa-solid fa-power-off"></i>
+        </button>
+    </header>
+
+
+    <main class="container floating-actions">
+        <div class="card card-soft p-3">
+            <div class="alert alert-success d-none" id="ok"></div>
+            <div class="alert alert-danger d-none" id="err"></div>
+
+            <form id="deposit_Form">
+                <label class="form-label">Monto a depositar</label>
+                <input class="form-control mb-3" type="number" min="1" id="amount" placeholder="Ej: 10000" required />
+                <button class="btn btn-primary w-100" id="btnDeposit" type="submit">
+                    Depositar
+                </button>
+            </form>
+        </div>
+        <div style="height: 80px"></div>
+    </main>
 
 
 
 
 
-        <footer>
+    <footer>
         <p class="text-center">@2026 alke wallet Cristian Altamirano</p>
     </footer>
+
+    <script src="https://cdn.jsdelivir.net/npm/bootstrap@5.3.8/dist/css/bootstrap.bundle.min.js"></script>
+
+
+
+    <script>
+        //proteger vista
+        const usuarioLogueado = localStorage.getItem("usuarioLogueado");
+        if (!usuarioLogueado) {
+            window.location = "login.html"
+        }
+
+
+
+        //cerrar sesion
+        document.getElementById("logout").addEventListener("click", function () {
+            localStorage.removeItem("usuarioLogueado");
+            window.location.href = "login.html"
+        });
+
+        $(function () {
+            renderBalance("#balance");
+
+            const $ok = $("#ok");
+            const $err = $("#err");
+            const $amount = $("#amount");
+            const $btn = $("#btnDeposit");
+
+            function resetAlerts() {
+                $ok.addClass("d-none").text("");
+                $err.addClass("d-none").text("");
+            };
+
+
+            $amount.on("input", resetAlerts);
+
+
+            $("#deposit_Form").on("submit", function (e) {
+                e.preventDefault();
+                resetAlerts();
+
+                const amount = $amount.val();
+
+
+                const originalText = $btn.text();
+                $btn.prop("disabled", true).text("Procesando...");
+
+                setTimeout(() => {
+                    const res = deposit(amount);
+
+                    if (!res.ok) {
+                        $err.removeClass("d-none").text(res.msg);
+                        $btn.prop("disabled", false).text(originalText);
+                        return;
+                    }
+                    renderBalance("#balance");
+                    $ok.removeClass("d-none").text("Depósito realizado con éxito ✅");
+
+
+                    setTimeout(() => {
+                        window.location.href = "menu.html";
+                    }, 1200);
+                }, 400);
+            });
+        });
+
+        function deposit(amount) {
+            const a = Number(amount);
+
+            if (!Number.isFinite(a) || a <= 0) {
+                return { ok: false, msg: "Ingresa un monto válido (mayor a 0)." };
+            }
+
+            const newB = getBalance() + a;
+            setBalance(newB);
+
+            addTx({
+                type: "Depósito",
+                amount: a,
+                date: nowISO(),
+                detail: "Depósito realizado",
+            });
+
+            return { ok: true, newBalance: newB };
+        }
+
+    </script>
 </body>
 
 </html>

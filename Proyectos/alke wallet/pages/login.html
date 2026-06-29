@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
 
+    <!--wallet-->
+    <script src="/Proyectos/alke wallet/assets/js/wallet.js"></script>
+
     <!--bootstrap-->
     <link href="https://cdn.jsdelivir.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -103,6 +106,23 @@
                 }, 3000);
             }
         });
+
+        function login(usuario, password) {
+            const u = String(usuario || "")
+                .trim()
+                .toLowerCase();
+            const p = String(password || "").trim();
+
+            const user = findUser(u);
+            const ok = !!u && u.pass === p;
+
+            if (ok) {
+                localStorage.setItem(LS.logged, "true");
+                localStorage.setItem(LS.user, e);
+                ensureUserWallet(e);
+            }
+            return ok;
+        }
     </script>
 </body>
 

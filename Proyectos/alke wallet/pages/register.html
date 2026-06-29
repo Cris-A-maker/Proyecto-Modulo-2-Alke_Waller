@@ -95,6 +95,16 @@
             }
 
 
+            if (findUser(usuario)) {
+                document.getElementById("mensaje").innerHTML = `
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        Ese usuario ya está registrado.
+                        <button type="button" class="btn-close" data-bs-dismiss>
+                        </button>
+                    </div>
+                `;
+                return;
+            }
 
             const nuevoUsuario = { nombre, usuario, contraseña };
 
@@ -104,6 +114,7 @@
 
             localStorage.setItem("usuarios", JSON.stringify(usuarios))
 
+            
 
             document.getElementById("mensaje").innerHTML = `
                 <div class="alert alert-danger alert-dismissable fade show">
@@ -119,6 +130,7 @@
 
             }, 3000);
 
+            ensureUserWallet(nuevoUsuario);
 
         })
     </script>
