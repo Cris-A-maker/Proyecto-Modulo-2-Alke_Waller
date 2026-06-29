@@ -37,7 +37,7 @@
             <form id="deposit_Form">
                 <label class="form-label">Monto a depositar</label>
                 <input class="form-control mb-3" type="number" min="1" id="amount" placeholder="Ej: 10000" required />
-                <button class="btn btn-primary w-100" id="btnDeposit" type="submit">
+                <button class="btn btn-primary w-100" id="btn_Deposit" type="submit">
                     Depositar
                 </button>
             </form>
@@ -78,7 +78,7 @@
             const $ok = $("#ok");
             const $err = $("#err");
             const $amount = $("#amount");
-            const $btn = $("#btnDeposit");
+            const $btn = $("#btn_Deposit");
 
             function resetAlerts() {
                 $ok.addClass("d-none").text("");

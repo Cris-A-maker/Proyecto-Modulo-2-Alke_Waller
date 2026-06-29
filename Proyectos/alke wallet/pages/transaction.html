@@ -35,7 +35,7 @@
         </div>
 
         <div class="d-flex justify-content-between align-items-center mt-3 gap-2">
-            <button class="btn btn-outline-secondary d-flex align-items-center gap-1" id="prevPage" type="button">
+            <button class="btn btn-outline-secondary d-flex align-items-center gap-1" id="prev_Page" type="button">
                 <i class="bi bi-arrow-left"></i>
                 Anterior
             </button>
@@ -76,7 +76,93 @@
             localStorage.removeItem("usuarioLogueado");
             window.location.href = "login.html"
         });
+
+
+        $(function () {
+            renderBalance("#balanceTx");
+
+            const PAGE_SIZE = 15;
+            const tx = getTx() || [];
+
+            let page = 1; // partir en 1
+            const totalPages = Math.max(1, Math.ceil(tx.length / PAGE_SIZE));
+
+            const $list = $("#txt_List");
+            const $prev = $("#prev_Page");
+            const $next = $("#next_Page");
+            const $pageNum = $("#page_Num");
+            const $pageTotal = $("#page_Total");
+
+            $pageTotal.text(total_Pages);
+
+            function renderPage() {
+                $list.empty();
+
+                $list.removeClass("tx-fade");
+                void $list[0].offsetWidth;
+                $list.addClass("tx-fade");
+
+                if (tx.length === 0) {
+                    $list.append(
+                        `<div class="p-3 small-muted">No hay movimientos aún.</div>`
+                    );
+                    $prev.prop("disabled", true);
+                    $next.prop("disabled", true);
+                    $pageNum.text(1);
+                    $pageTotal.text(1);
+                    return;
+                }
+
+                const start = (page - 1) * PAGE_SIZE;
+                const end = start + PAGE_SIZE;
+                const slice = tx.slice(start, end);
+
+                slice.forEach((t) => {
+                    const date = new Date(t.date).toLocaleString("es-CL");
+                    const isTransfer = (t.type || "").toLowerCase().includes("transferencia");
+                    const sign = isTransfer ? "-" : "+";
+                    const amountClass = isTransfer ? "text-danger" : "text-success";
+
+                    $list.append(`
+        <div class="list-group-item">
+        <div class="d-flex justify-content-between">
+            <div>
+            <strong>${t.type}</strong>
+            <div class="small-muted">${t.detail || ""}</div>
+            <div class="small-muted">${date}</div>
+            </div>
+            <strong class="${amountClass}">
+            ${sign} ${moneyCLP(t.amount)}
+            </strong>
+        </div>
+        </div>
+    `);
+                });
+
+                //page info
+                $pageNum.text(page);
+
+                // Enable/disable buttons
+                $prev.prop("disabled", page <= 1);
+                $next.prop("disabled", page >= totalPages);
+            }
+            // Eventos
+            $prev.on("click", function () {
+                if (page > 1) {
+                    page--;
+                    renderPage();
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+            });
+            $next.on("click", function () {
+                if (page < totalPages) {
+                    page++;
+                    renderPage();
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+            });
+            renderPage();
+        });
     </script>
 </body>
-
 </html>

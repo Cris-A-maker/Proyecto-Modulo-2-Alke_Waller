@@ -32,22 +32,22 @@
     <main class="container floating-actions">
         <div class="card card-soft p-3">
             <div class="small-muted mb-2">
-                Saldo: <strong id="balanceSend">$0</strong>
+                Saldo: <strong id="balance_Send">$0</strong>
             </div>
 
-            <div class="alert alert-success d-none" id="okSend"></div>
-            <div class="alert alert-danger d-none" id="errSend"></div>
+            <div class="alert alert-success d-none" id="ok_Send"></div>
+            <div class="alert alert-danger d-none" id="err_Send"></div>
 
-            <div class="d-none small-muted mb-2" id="selectedContact"></div>
+            <div class="d-none small-muted mb-2" id="selected_Contact"></div>
 
             <form id="enviar_Form">
                 <label class="form-label">Buscar contacto</label>
-                <input class="form-control mb-2" id="searchContact" placeholder="Escribe un nombre..." />
+                <input class="form-control mb-2" id="search_Contact" placeholder="Escribe un nombre..." />
 
-                <div class="list-group mb-3" id="contactsList"></div>
+                <div class="list-group mb-3" id="contacts_List"></div>
 
                 <label class="form-label">Monto</label>
-                <input class="form-control mb-3" type="number" min="1" id="amountSend" placeholder="Ej: 1500"
+                <input class="form-control mb-3" type="number" min="1" id="amount_Send" placeholder="Ej: 1500"
                     required />
 
                 <button class="btn btn-primary w-100" id="btnSend" type="submit">
@@ -67,16 +67,16 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <input class="form-control mb-2" id="cName" placeholder="Nombre" />
-                    <input class="form-control mb-2" id="cBank" placeholder="Banco" />
-                    <input class="form-control" id="cAcc" placeholder="Cuenta (ej: 123-456)" />
+                    <input class="form-control mb-2" id="c_nombre" placeholder="Nombre" />
+                    <input class="form-control mb-2" id="c_Bank" placeholder="Banco" />
+                    <input class="form-control" id="c_Acc" placeholder="Cuenta (ej: 123-456)" />
                     <div class="small-muted mt-2">Se guardará en localStorage.</div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-light" data-bs-dismiss="modal">
                         Cancelar
                     </button>
-                    <button class="btn btn-primary" id="saveContact" type="button">
+                    <button class="btn btn-primary" id="save_Contact" type="button">
                         Guardar
                     </button>
                 </div>
@@ -110,6 +110,138 @@
             localStorage.removeItem("usuarioLogueado");
             window.location.href = "login.html"
         });
+
+
+        $(function () {
+            // saldo
+            renderBalance("#balance_Send");
+
+            const $list = $("#contacts_List");
+            const $search = $("#search_Contact");
+            const $amount = $("#amount_Send");
+            const $ok = $("#ok_Send");
+            const $err = $("#err_Send");
+            const $btn = $("#btn_Send");
+
+            let selected = null;
+
+            function resetAlerts() {
+                $ok.addClass("d-none").text("");
+                $err.addClass("d-none").text("");
+            }
+
+            function paintContacts(filter = "") {
+                const all = getContacts();
+                const q = filter.trim().toLowerCase();
+                const filtered = all.filter((c) => c.name.toLowerCase().includes(q));
+
+                $list.empty();
+
+                if (filtered.length === 0) {
+                    $list.append(
+                        `<div class="list-group-item small-muted">No hay contactos.</div>`
+                    );
+                    return;
+                }
+
+                filtered.forEach((c) => {
+                    const $item = $(`
+        <button type="button" class="list-group-item list-group-item-action">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+            <strong>${c.name}</strong>
+            <div class="small-muted">${c.bank || "Banco"} · ${c.account || "Cuenta"
+                        }</div>
+            </div>
+            <span class="badge text-bg-light">Seleccionar</span>
+        </div>
+        </button>
+    `);
+
+                    $item.on("click", function () {
+                        selected = c;
+                        $("#selected_Contact")
+                            .text(`Seleccionado: ${c.name}`)
+                            .removeClass("d-none");
+
+                        //marcar seleccionado
+                        $list.find("button").removeClass("active");
+                        $item.addClass("active");
+
+                        resetAlerts();
+                    });
+
+                    $list.append($item);
+                });
+            }
+
+            // Inicial
+            paintContacts();
+
+            //filtra en vivo
+            $search.on("input", function () {
+                paintContacts($(this).val());
+            });
+
+            // Limpiar mensajes al escribir
+            $amount.on("input", resetAlerts);
+
+            // Enviar dinero
+            $("#sendForm").on("submit", function (e) {
+                e.preventDefault();
+                resetAlerts();
+
+                const amount = $amount.val();
+                const originalText = $btn.text();
+
+                $btn.prop("disabled", true).text("Enviando...");
+
+                setTimeout(() => {
+                    const res = sendMoney(selected?.name, amount);
+
+                    if (!res.ok) {
+                        $err.removeClass("d-none").text(res.msg);
+                        $btn.prop("disabled", false).text(originalText);
+                        return;
+                    }
+
+                    $ok.removeClass("d-none").text("Transferencia realizada ✅");
+                    renderBalance("#balanceSend");
+                    $amount.val("");
+
+                    // al historial de transacciones
+                    setTimeout(() => {
+                        window.location.href = "transactions.html";
+                    }, 900);
+                }, 400);
+            });
+
+            //agregar contacto
+            $("#save_Contact").on("click", function () {
+                const name = $("#c_nombre").val().trim();
+                const bank = $("#c_Bank").val().trim();
+                const acc = $("#c_Acc").val().trim();
+
+                if (!name || !bank || !acc) {
+                    alert("Completa todos los campos del contacto.");
+                    return;
+                }
+
+                const list = getContacts();
+                list.unshift({ name, bank, account: acc });
+                setContacts(list);
+
+                $("#c_nombre,#c_Bank,#c_Acc").val("");
+
+                const modal = bootstrap.Modal.getInstance(
+                    document.getElementById("addModal")
+                );
+                modal.hide();
+
+                paintContacts($search.val());
+            });
+        });
+
     </script>
 </body>
 
